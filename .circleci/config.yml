@@ -8,5 +8,14 @@ jobs:
       GO111MODULE: "on"
     steps:
       - checkout
-      - run: go get -v -t -d ./...
-      - run: go test -v ./...
+      - run: 
+        name: Build
+        command: go get -v -t -d ./...
+      - run: 
+        name: Test
+        command: go test -v cover -race -coverprofile=./coverage.out ./...
+      - run:
+        name: Upload to coveralls
+        command: |
+          go get github.com/mattn/goveralls
+          goveralls -coverprofile=./coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
