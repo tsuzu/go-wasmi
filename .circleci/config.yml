@@ -3,11 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.11
-    working_directory: /go/src/github.com/cs3238-tsuzu/go-wasmi
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     environment:
       GO111MODULE: "on"
-    steps:
+      steps:
       - checkout
-      - run:
-          name: Test
-          command: go test -v github.com/cs3238-tsuzu/go-wasmi/...
+      - run: go get -v -t -d ./...
+      - run: go test -v ./...
