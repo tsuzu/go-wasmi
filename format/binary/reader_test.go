@@ -1,9 +1,12 @@
 package binary_test
 
 import (
-	"github.com/cs3238-tsuzu/go-wasmi/format/binary"
 	"os"
 	"testing"
+
+	"github.com/k0kubun/pp"
+
+	"github.com/cs3238-tsuzu/go-wasmi/format/binary"
 )
 
 func TestParse(t *testing.T) {
@@ -14,7 +17,24 @@ func TestParse(t *testing.T) {
 	}
 	defer fp.Close()
 
-	if err := binary.NewParser(fp).Parse(); err != nil {
-		t.Error("parsing sum.wasm error", err)
+	if sections, err := binary.ParseBinaryFormat(fp); err != nil {
+		t.Errorf("parsing sum.wasm error %v %v", sections, err)
+	} else {
+		t.Log(pp.Sprint(sections))
+	}
+}
+
+func TestParse2(t *testing.T) {
+	fp, err := os.Open("testdata/go_sum.wasm")
+
+	if err != nil {
+		t.Error("testdata/sum.wasm is missing", err)
+	}
+	defer fp.Close()
+
+	if sections, err := binary.ParseBinaryFormat(fp); err != nil {
+		t.Errorf("parsing sum.wasm error %v %v", sections, err)
+	} else {
+		t.Log(pp.Sprint(sections))
 	}
 }

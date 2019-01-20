@@ -1,7 +1,11 @@
 package binrw
 
-import "encoding/binary"
-import "io"
+import (
+	"encoding/binary"
+	"io"
+
+	"github.com/cs3238-tsuzu/go-wasmi/util/leb128"
+)
 
 // ReadLEUint32 reads uint32 value encoded in little endian
 func ReadLEUint32(r io.Reader) (uint32, error) {
@@ -29,4 +33,45 @@ func ReadByte(r io.Reader) (byte, error) {
 	_, err := io.ReadFull(r, buf)
 
 	return buf[0], err
+}
+
+// ReadVector parses vectors in wasm binary format and calls fn for each element
+func ReadVector(r io.Reader, fn func(uint32, io.Reader) error) (uint32, error) {
+	size, err := leb128.ReadUint32(r)
+
+	if err != nil {
+		return 0, err
+	}
+
+	for i := uint32(0); i < size; i++ {
+		err := fn(size, r)
+
+		if err != nil {
+			if err != io.EOF {
+				return 0, err
+			}
+			if i != size-1 {
+				return 0, err
+			}
+		}
+	}
+
+	return size, nil
+}
+
+// ReadVecBytes read bytes as long as len(x) * elemSize
+func ReadVecBytes(r io.Reader, elemSize int) ([]byte, error) {
+	size, err := leb128.ReadUint32(r)
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf := make([]byte, size*uint32(elemSize))
+
+	if _, err := io.ReadFull(r, buf); err != nil {
+		return nil, err
+	}
+
+	return buf, nil
 }

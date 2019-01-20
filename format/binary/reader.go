@@ -1,9 +1,9 @@
 package binary
 
 import (
-	"errors"
 	"io"
-	"log"
+
+	"github.com/pkg/errors"
 
 	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
 )
@@ -13,47 +13,40 @@ const (
 	versionNumber uint32 = 0x01
 )
 
+// ErrInvalidFormat is an error occurred when data contain invalid format
 var ErrInvalidFormat = errors.New("invalid format")
 
-type Parser struct {
-	r io.Reader
-}
-
-func NewParser(r io.Reader) *Parser {
-	return &Parser{
-		r: r,
-	}
-}
-
-func (p *Parser) Parse() error {
-	magic, err := binrw.ReadLEUint32(p.r)
+// ParseBinaryFormat parses wasm binary and returns sections
+func ParseBinaryFormat(r io.Reader) ([]Section, error) {
+	magic, err := binrw.ReadLEUint32(r)
 
 	if err != nil {
-		return err
+		return nil, errors.WithStack(err)
 	}
 
 	if magic != magicNumber {
-		return ErrInvalidFormat
+		return nil, ErrInvalidFormat
 	}
 
-	version, err := binrw.ReadLEUint32(p.r)
+	version, err := binrw.ReadLEUint32(r)
 
 	if err != nil {
-		return err
+		return nil, errors.WithStack(err)
 	}
 
 	if version != versionNumber {
-		return ErrInvalidFormat
+		return nil, ErrInvalidFormat
 	}
 
 	sections := make([]Section, 0, 16)
 	for {
-		section, err := ReadSection(p.r)
+		var section Section
+		err := section.UnmarshalSection(r)
 
-		if err == io.EOF {
+		if errors.Cause(err) == io.EOF {
 			break
 		} else if err != nil {
-			return err
+			return nil, errors.WithStack(err)
 		}
 
 		sections = append(sections, section)
