@@ -84,6 +84,16 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 		entity = &SectionEntityType{}
 	case SectionImport:
 		entity = &SectionEntityImport{}
+	case SectionFunction:
+		entity = &SectionEntityFunction{}
+	case SectionTable:
+		entity = &SectionEntityTable{}
+	case SectionMemory:
+		entity = &SectionEntityMemory{}
+	//case SectionGlobal:
+	case SectionExport:
+		entity = &SectionEntityExport{}
+
 	default:
 		// TODO: For debugging, but must be removed
 		ioutil.ReadAll(limited)

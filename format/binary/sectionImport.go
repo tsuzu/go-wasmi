@@ -16,7 +16,7 @@ type SectionEntityImport struct {
 	ImportTypes []*types.ImportType
 }
 
-// UnmarshalSectionEntity parses custom section payload
+// UnmarshalSectionEntity parses import section payload
 func (s *SectionEntityImport) UnmarshalSectionEntity(r io.Reader) error {
 	var importTypes []*types.ImportType
 	_, err := binrw.ReadVector(r, func(size uint32, r io.Reader) error {

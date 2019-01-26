@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// ReadMemory parses memory type from reader
-func ReadMemory(r io.Reader) (*types.MemoryType, error) {
+// ReadMemoryType parses memory type from reader
+func ReadMemoryType(r io.Reader) (*types.MemoryType, error) {
 	limits, err := ReadLimits(r)
 
 	if err != nil {

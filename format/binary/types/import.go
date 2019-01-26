@@ -37,8 +37,8 @@ func ReadImportType(r io.Reader) (*types.ImportType, error) {
 		DescriptionKind: types.ImportDescriptionKind(descType),
 	}
 
-	switch descType {
-	case 0x00:
+	switch imp.DescriptionKind {
+	case types.ImportDescriptionType:
 		v, err := leb128.ReadUint32(r)
 
 		if err != nil {
@@ -47,19 +47,19 @@ func ReadImportType(r io.Reader) (*types.ImportType, error) {
 
 		imp.Type = types.TypeIndex(v)
 
-	case 0x01:
+	case types.ImportDescriptionTable:
 		imp.Table, err = ReadTableType(r)
 
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-	case 0x02:
-		imp.Memory, err = ReadMemory(r)
+	case types.ImportDescriptionMemory:
+		imp.Memory, err = ReadMemoryType(r)
 
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-	case 0x03:
+	case types.ImportDescriptionGlobal:
 		imp.Global, err = ReadGlobalType(r)
 
 		if err != nil {
