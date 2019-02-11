@@ -16,7 +16,8 @@ jobs:
             mkdir wabt/build
             cd wabt/build
             cmake ..
-            make install -j2 
+            make install -j2
+            cd ../../ && rm -r wabt
       - checkout
       - run: 
           name: Build
