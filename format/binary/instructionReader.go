@@ -54,7 +54,7 @@ func readInstructionBranchTable(r io.Reader, t types.InstructionType) (*types.In
 		index, err := leb128.ReadUint32(r)
 
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
 		indices = append(indices, types.LabelIndex(index))

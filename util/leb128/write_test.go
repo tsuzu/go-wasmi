@@ -33,10 +33,10 @@ func testWriteUnsigned(fnName string, fn writeFuncTypeForUnsigned, t *testing.T)
 	buf := bytes.NewBuffer(nil)
 	for i := range from {
 		if err := fn(buf, from[i]); err != nil {
-			t.Errorf("%s error=> from: %d, to: %v, error: %v", fnName, from[i], to[i], err)
+			t.Errorf("%s error=> from: %d, to: %+v, error: %+v", fnName, from[i], to[i], err)
 		}
 		if !reflect.DeepEqual(to[i], buf.Bytes()) {
-			t.Errorf("%s error=> from: %d, to: %v, expected: %v", fnName, from[i], buf.Bytes(), to[i])
+			t.Errorf("%s error=> from: %d, to: %+v, expected: %+v", fnName, from[i], buf.Bytes(), to[i])
 		}
 		buf.Reset()
 	}
@@ -67,10 +67,10 @@ func testWriteSigned(fnName string, fn writeFuncTypeForSigned, t *testing.T) {
 	buf := bytes.NewBuffer(nil)
 	for i := range from {
 		if err := fn(buf, from[i]); err != nil {
-			t.Errorf("%s error=> from: %d, to: %v, error: %v", fnName, from[i], to[i], err)
+			t.Errorf("%s error=> from: %d, to: %+v, error: %+v", fnName, from[i], to[i], err)
 		}
 		if !reflect.DeepEqual(to[i], buf.Bytes()) {
-			t.Errorf("%s error=> from: %d, to: %v, expected: %v", fnName, from[i], buf.Bytes(), to[i])
+			t.Errorf("%s error=> from: %d, to: %+v, expected: %+v", fnName, from[i], buf.Bytes(), to[i])
 		}
 		buf.Reset()
 	}

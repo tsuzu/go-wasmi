@@ -33,9 +33,9 @@ func testReadUnsigned(fnName string, fn ReadFuncTypeForUnsigned, t *testing.T) {
 
 	for i := range from {
 		if v, err := fn(bytes.NewReader(from[i])); err != nil {
-			t.Errorf("%s error=> from: %v, to: %d, error: %v", fnName, from[i], to[i], err)
+			t.Errorf("%s error=> from: %+v, to: %d, error: %+v", fnName, from[i], to[i], err)
 		} else if !reflect.DeepEqual(to[i], v) {
-			t.Errorf("%s error=> from: %v, to: %d, expected: %d", fnName, from[i], v, to[i])
+			t.Errorf("%s error=> from: %+v, to: %d, expected: %d", fnName, from[i], v, to[i])
 		}
 	}
 }
@@ -64,9 +64,9 @@ func testReadSigned(fnName string, fn ReadFuncTypeForSigned, t *testing.T) {
 
 	for i := range from {
 		if v, err := fn(bytes.NewReader(from[i])); err != nil {
-			t.Errorf("%s error=> from: %v, to: %d, error: %v", fnName, from[i], to[i], err)
+			t.Errorf("%s error=> from: %+v, to: %d, error: %+v", fnName, from[i], to[i], err)
 		} else if !reflect.DeepEqual(to[i], v) {
-			t.Errorf("%s error=> from: %v, to: %d, expected: %d", fnName, from[i], v, to[i])
+			t.Errorf("%s error=> from: %+v, to: %d, expected: %d", fnName, from[i], v, to[i])
 		}
 	}
 }
@@ -125,7 +125,7 @@ func TestReadInt64WithInsufficientData(t *testing.T) {
 	_, err := leb128.ReadInt64(bytes.NewReader(b))
 
 	if errors.Cause(err) != io.ErrUnexpectedEOF {
-		t.Errorf("error should be unexpected EOF: %v", err)
+		t.Errorf("error should be unexpected EOF: %+v", err)
 	}
 }
 
@@ -135,7 +135,7 @@ func TestReadInt32WithInsufficientData(t *testing.T) {
 	_, err := leb128.ReadInt32(bytes.NewReader(b))
 
 	if errors.Cause(err) != io.ErrUnexpectedEOF {
-		t.Errorf("error should be unexpected EOF: %v", err)
+		t.Errorf("error should be unexpected EOF: %+v", err)
 	}
 }
 
@@ -145,6 +145,6 @@ func TestReadIntWithInsufficientData(t *testing.T) {
 	_, err := leb128.ReadInt(bytes.NewReader(b))
 
 	if errors.Cause(err) != io.ErrUnexpectedEOF {
-		t.Errorf("error should be unexpected EOF: %v", err)
+		t.Errorf("error should be unexpected EOF: %+v", err)
 	}
 }

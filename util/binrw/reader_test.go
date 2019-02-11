@@ -102,7 +102,7 @@ func TestReadVectorSuccess(t *testing.T) {
 		b, err := ioutil.ReadAll(io.LimitReader(r, 5))
 
 		if err != nil {
-			t.Errorf("reading for each element error: %d times, %v", cnt, err)
+			t.Errorf("reading for each element error: %d times, %+v", cnt, err)
 		}
 
 		if string(b) != message {
@@ -115,7 +115,7 @@ func TestReadVectorSuccess(t *testing.T) {
 	})
 
 	if err != nil {
-		t.Errorf("ReadVector error: %v", err)
+		t.Errorf("ReadVector error: %+v", err)
 	}
 
 	if s != size {
@@ -133,7 +133,7 @@ func TestReadVectorLEB128Error(t *testing.T) {
 	})
 
 	if errors.Cause(err) != io.ErrUnexpectedEOF {
-		t.Errorf("ReadVector must return unexpected EOF, but returned %v", err)
+		t.Errorf("ReadVector must return unexpected EOF, but returned %+v", err)
 	}
 }
 
@@ -158,10 +158,10 @@ func TestReadVecBytesSuccess(t *testing.T) {
 	res, err := binrw.ReadVecBytes(buf, len(b))
 
 	if err != nil {
-		t.Errorf("ReadVecBytes error: %v", err)
+		t.Errorf("ReadVecBytes error: %+v", err)
 	}
 
 	if !reflect.DeepEqual(payload.Bytes(), res) {
-		t.Errorf("data is not equal: expected=>%v, actual=>%v", payload.Bytes(), res)
+		t.Errorf("data is not equal: expected=>%+v, actual=>%+v", payload.Bytes(), res)
 	}
 }

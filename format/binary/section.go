@@ -111,7 +111,7 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 	}
 
 	if b, _ := ioutil.ReadAll(limited); len(b) != 0 {
-		panic(errors.Errorf("All data in this section must be loaded %v %d", kind, len(b)))
+		panic(errors.Errorf("All data in this section must be loaded %+v %d", kind, len(b)))
 	}
 
 	s.Entity = entity

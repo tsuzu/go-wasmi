@@ -18,7 +18,7 @@ func TestParse(t *testing.T) {
 	defer fp.Close()
 
 	if sections, err := binary.ParseBinaryFormat(fp); err != nil {
-		t.Errorf("parsing sum.wasm error %v %v", sections, err)
+		t.Errorf("parsing sum.wasm error %+v %+v", sections, err)
 	} else {
 		t.Log(pp.Sprint(sections))
 	}
@@ -33,7 +33,7 @@ func TestParse2(t *testing.T) {
 	defer fp.Close()
 
 	if sections, err := binary.ParseBinaryFormat(fp); err != nil {
-		t.Errorf("parsing sum.wasm error %v %v", sections, err)
+		t.Errorf("parsing sum.wasm error %+v %+v", sections, err)
 	} else {
 		t.Log(pp.Sprint(sections))
 	}
