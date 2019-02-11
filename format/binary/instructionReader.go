@@ -79,8 +79,8 @@ func readInstructionBranchTable(r io.Reader, t types.InstructionType) (*types.In
 	}, nil
 }
 
-func readInstructionLocalIndex(r io.Reader, t types.InstructionType) (*types.InstructionLabelIndex, error) {
-	res := &types.InstructionLabelIndex{
+func readInstructionLocalIndex(r io.Reader, t types.InstructionType) (*types.InstructionLocalIndex, error) {
+	res := &types.InstructionLocalIndex{
 		Instruction: t,
 	}
 
@@ -90,7 +90,7 @@ func readInstructionLocalIndex(r io.Reader, t types.InstructionType) (*types.Ins
 		return nil, errors.WithStack(err)
 	}
 
-	res.Index = types.LabelIndex(index)
+	res.Index = types.LocalIndex(index)
 
 	return res, nil
 }

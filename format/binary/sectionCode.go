@@ -38,13 +38,13 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 
 		elm := CodeSectionElement{}
 
-		size, err := leb128.ReadUint32(r)
+		l, err := leb128.ReadUint32(r)
 
 		if err != nil {
 			return errors.WithStack(err)
 		}
 
-		limited := io.LimitReader(r, int64(size))
+		limited := io.LimitReader(r, int64(l))
 
 		_, err = binrw.ReadVector(r, func(size uint32, r io.Reader) error {
 			if elm.Locals == nil {
