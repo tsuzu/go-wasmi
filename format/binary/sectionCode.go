@@ -18,7 +18,7 @@ type CodeSectionLocal struct {
 	ValTypes types.ValType
 }
 
-// COdeSectionElement represents an element of code section
+// CodeSectionElement represents an element of code section
 type CodeSectionElement struct {
 	Locals []CodeSectionLocal
 	Expr   []types.InstructionInterface
@@ -53,17 +53,19 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 
 			var local CodeSectionLocal
 
-			if size, err := leb128.ReadUint32(r); err != nil {
+			size, err := leb128.ReadUint32(r)
+			if err != nil {
 				return errors.WithStack(err)
-			} else {
-				local.Size = size
 			}
 
-			if v, err := bintypes.ReadValType(r); err != nil {
+			local.Size = size
+
+			v, err := bintypes.ReadValType(r)
+			if err != nil {
 				return errors.WithStack(err)
-			} else {
-				local.ValTypes = v
 			}
+
+			local.ValTypes = v
 
 			elm.Locals = append(elm.Locals, local)
 
@@ -74,11 +76,12 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 			return errors.WithStack(err)
 		}
 
-		if expr, err := ReadExpression(limited); err != nil {
+		expr, err := ReadExpression(limited)
+		if err != nil {
 			return errors.WithStack(err)
-		} else {
-			elm.Expr = expr
 		}
+
+		elm.Expr = expr
 
 		s.Codes = append(s.Codes, elm)
 

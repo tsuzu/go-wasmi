@@ -11,6 +11,7 @@ import (
 	"github.com/cs3238-tsuzu/go-wasmi/types"
 )
 
+// DataSectionElement represents an element in data section
 type DataSectionElement struct {
 	MemoryIndex types.MemoryIndex
 	Expr        []types.InstructionInterface
@@ -31,13 +32,13 @@ func (s *SectionEntityData) UnmarshalSectionEntity(r io.Reader) error {
 
 		elm := DataSectionElement{}
 
-		if index, err := leb128.ReadUint32(r); err != nil {
+		index, err := leb128.ReadUint32(r)
+		if err != nil {
 			return errors.WithStack(err)
-		} else {
-			elm.MemoryIndex = types.MemoryIndex(index)
 		}
 
-		var err error
+		elm.MemoryIndex = types.MemoryIndex(index)
+
 		elm.Expr, err = ReadExpression(r)
 
 		if err != nil {

@@ -11,6 +11,7 @@ import (
 	"github.com/cs3238-tsuzu/go-wasmi/types"
 )
 
+// ElementSectionElement represents an element in element section
 type ElementSectionElement struct {
 	TableIndex  types.TableIndex
 	Expr        []types.InstructionInterface
@@ -31,13 +32,12 @@ func (s *SectionEntityElement) UnmarshalSectionEntity(r io.Reader) error {
 
 		elm := ElementSectionElement{}
 
-		if index, err := leb128.ReadUint32(r); err != nil {
+		index, err := leb128.ReadUint32(r)
+		if err != nil {
 			return errors.WithStack(err)
-		} else {
-			elm.TableIndex = types.TableIndex(index)
 		}
+		elm.TableIndex = types.TableIndex(index)
 
-		var err error
 		elm.Expr, err = ReadExpression(r)
 
 		if err != nil {

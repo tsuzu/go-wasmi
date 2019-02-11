@@ -28,13 +28,13 @@ func readInstructionSimpleWith0x00(r io.Reader, t types.InstructionType) (*types
 	instr, err := readInstructionSimple(r, t)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	b, err := binrw.ReadByte(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	if b != 0x00 {
@@ -63,13 +63,13 @@ func readInstructionBranchTable(r io.Reader, t types.InstructionType) (*types.In
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	d, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	return &types.InstructionBranchTable{
@@ -87,7 +87,7 @@ func readInstructionLocalIndex(r io.Reader, t types.InstructionType) (*types.Ins
 	index, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.Index = types.LabelIndex(index)
@@ -103,7 +103,7 @@ func readInstructionGlobalIndex(r io.Reader, t types.InstructionType) (*types.In
 	index, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.Index = types.GlobalIndex(index)
@@ -119,7 +119,7 @@ func readInstructionFuncIndex(r io.Reader, t types.InstructionType) (*types.Inst
 	index, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.Index = types.FuncIndex(index)
@@ -135,7 +135,7 @@ func readInstructionLabelIndex(r io.Reader, t types.InstructionType) (*types.Ins
 	index, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.Index = types.LabelIndex(index)
@@ -151,7 +151,7 @@ func readInstructionCallIndirect(r io.Reader, t types.InstructionType) (*types.I
 	index, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.Index = types.TypeIndex(index)
@@ -159,7 +159,7 @@ func readInstructionCallIndirect(r io.Reader, t types.InstructionType) (*types.I
 	b, err := binrw.ReadByte(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	if b != 0x00 {
@@ -177,13 +177,13 @@ func readInstructionBlock(r io.Reader, t types.InstructionType) (*types.Instruct
 	b, err := binrw.ReadByte(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	instr, err := ReadExpression(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.BlockType = types.ValType(b)
@@ -200,7 +200,7 @@ func readInstructionBlockIfElse(r io.Reader, block *types.InstructionBlock) (*ty
 	instr, err := ReadExpression(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.ElseInstructions = instr
@@ -219,13 +219,13 @@ func readInstructionMemArg(r io.Reader, t types.InstructionType) (*types.Instruc
 	arg.Allignment, err = leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	arg.Offset, err = leb128.ReadUint32(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	res.MemArg = arg
@@ -243,7 +243,7 @@ func readInstructionConst(r io.Reader, t types.InstructionType) (*types.Instruct
 		v, err := leb128.ReadInt32(r)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		res.SetInt32(v)
@@ -251,7 +251,7 @@ func readInstructionConst(r io.Reader, t types.InstructionType) (*types.Instruct
 		v, err := leb128.ReadInt64(r)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		res.SetInt64(v)
@@ -259,7 +259,7 @@ func readInstructionConst(r io.Reader, t types.InstructionType) (*types.Instruct
 		b, err := binrw.ReadLEUint32(r)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		res.SetFloat32(math.Float32frombits(b))
@@ -267,7 +267,7 @@ func readInstructionConst(r io.Reader, t types.InstructionType) (*types.Instruct
 		b, err := binrw.ReadLEUint64(r)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 
 		res.SetFloat64(math.Float64frombits(b))
@@ -282,7 +282,7 @@ func readInstruction(r io.Reader) (types.InstructionInterface, error) {
 	b, err := binrw.ReadByte(r)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	t := types.InstructionType(b)
@@ -301,7 +301,7 @@ func readInstruction(r io.Reader) (types.InstructionInterface, error) {
 		instr, err := readInstructionBlock(r, t)
 
 		if err != ErrElseWithoutIf {
-			return instr, err
+			return instr, errors.WithStack(err)
 		}
 
 		return readInstructionBlockIfElse(r, instr)
@@ -338,7 +338,7 @@ func ReadExpression(r io.Reader) ([]types.InstructionInterface, error) {
 				err = nil
 			}
 
-			return res, err
+			return res, errors.WithStack(err)
 		}
 
 		res = append(res, r)

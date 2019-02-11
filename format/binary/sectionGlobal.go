@@ -11,6 +11,7 @@ import (
 	"github.com/cs3238-tsuzu/go-wasmi/types"
 )
 
+// GlobalSectionElement represents an element in global section
 type GlobalSectionElement struct {
 	Type types.GlobalType
 	Expr []types.InstructionInterface
@@ -30,13 +31,13 @@ func (s *SectionEntityGlobal) UnmarshalSectionEntity(r io.Reader) error {
 
 		elm := GlobalSectionElement{}
 
-		if t, err := bintypes.ReadGlobalType(r); err != nil {
+		t, err := bintypes.ReadGlobalType(r)
+		if err != nil {
 			return errors.WithStack(err)
-		} else {
-			elm.Type = *t
 		}
 
-		var err error
+		elm.Type = *t
+
 		elm.Expr, err = ReadExpression(r)
 
 		if err != nil {
