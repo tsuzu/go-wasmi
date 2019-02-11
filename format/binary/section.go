@@ -103,9 +103,6 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 	case SectionData:
 		entity = &SectionEntityData{}
 	default:
-		// TODO: For debugging, but must be removed
-		ioutil.ReadAll(limited)
-		return nil
 		return ErrUnknownSection
 	}
 
