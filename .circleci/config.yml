@@ -7,6 +7,15 @@ jobs:
     environment:
       GO111MODULE: "on"
     steps:
+      - run:
+          name: Install requirements
+          command: |
+            apt-get install -y g++ build-essential cmake
+            git clone --recursive https://github.com/WebAssembly/wabt
+            mkdir wabt/build
+            cd wabt/build
+            cmake ..
+            make install -j2 
       - checkout
       - run: 
           name: Build

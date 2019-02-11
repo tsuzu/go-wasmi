@@ -14,8 +14,8 @@ import (
 
 // CodeSectionLocal represents a set of local variables in a code element
 type CodeSectionLocal struct {
-	Size     uint32
-	ValTypes types.ValType
+	Size    uint32
+	ValType types.ValType
 }
 
 // CodeSectionElement represents an element of code section
@@ -65,7 +65,7 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 				return errors.WithStack(err)
 			}
 
-			local.ValTypes = v
+			local.ValType = v
 
 			elm.Locals = append(elm.Locals, local)
 

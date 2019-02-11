@@ -43,6 +43,9 @@ const (
 var (
 	// ErrUnknownSection is an error occurred when section id is unknown
 	ErrUnknownSection = errors.New("unknown section")
+
+	// ErrExcessOfBytesInSection is returned when all data are not read in a section
+	ErrExcessOfBytesInSection = errors.New("excess of bytes in section")
 )
 
 // SectionEntity is an interface for each kind of sections
@@ -74,8 +77,6 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 		return errors.WithStack(err)
 	}
 
-	limited := io.LimitReader(r, int64(size))
-
 	var entity SectionEntity
 	switch kind {
 	case SectionCustom:
@@ -106,12 +107,14 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 		return ErrUnknownSection
 	}
 
+	limited := io.LimitReader(r, int64(size))
+
 	if err := entity.UnmarshalSectionEntity(limited); err != nil {
 		return errors.WithStack(err)
 	}
 
 	if b, _ := ioutil.ReadAll(limited); len(b) != 0 {
-		panic(errors.Errorf("All data in this section must be loaded %+v %d", kind, len(b)))
+		return ErrExcessOfBytesInSection
 	}
 
 	s.Entity = entity
