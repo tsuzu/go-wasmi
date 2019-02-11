@@ -1,9 +1,11 @@
 package types
 
 // ValType is a value type for wasm
-type ValType uint32
+type ValType byte
 
 const (
+	// None represents empty result type
+	None ValType = 0x40
 	// I32 is 32-bit integer type
 	I32 ValType = 0x7f
 	// I64 is 64-bit integer type

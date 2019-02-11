@@ -1,12 +1,99 @@
 package types
 
+import (
+	"math"
+)
+
 // InstructionType represents instruction
 type InstructionType byte
+
+// InstructionInterface represents an interface of instructions
+type InstructionInterface interface {
+	// GetInstruction returns instruction opcode as InstructionType
+	GetInstruction() InstructionType
+}
 
 // InstructionSimple represents an InstructionSimple
 // taking no parameters
 type InstructionSimple struct {
 	Instruction InstructionType
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionSimple) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionBlock represents a control instruction
+// such as block, loop, if
+type InstructionBlock struct {
+	Instruction  InstructionType
+	BlockType    ValType
+	Instructions []InstructionInterface
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionBlock) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionBlockWithElse represents an if-else instruction
+type InstructionBlockIfElse struct {
+	*InstructionBlock
+	ElseInstructions []InstructionInterface
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionBlockIfElse) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionBranchTable represents br_table
+type InstructionBranchTable struct {
+	Instruction InstructionType
+	Indices     []LabelIndex
+	Default     LabelIndex
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionBranchTable) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionLabelIndex represents an instruction
+// taking a labelindex parameter
+type InstructionLabelIndex struct {
+	Instruction InstructionType
+	Index       LabelIndex
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionLabelIndex) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionFuncIndex represents an instruction
+// taking a funcindex parameter
+type InstructionFuncIndex struct {
+	Instruction InstructionType
+	Index       FuncIndex
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionFuncIndex) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionTypeIndex represents an instruction
+// taking a typeindex parameter
+type InstructionTypeIndex struct {
+	Instruction InstructionType
+	Index       TypeIndex
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionTypeIndex) GetInstruction() InstructionType {
+	return i.Instruction
 }
 
 // InstructionLocalIndex represents an instruction
@@ -16,11 +103,21 @@ type InstructionLocalIndex struct {
 	Index       LocalIndex
 }
 
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionLocalIndex) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
 // InstructionGlobalIndex represents an instruction
 // taking a globalindex parameter
 type InstructionGlobalIndex struct {
 	Instruction InstructionType
 	Index       GlobalIndex
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionGlobalIndex) GetInstruction() InstructionType {
+	return i.Instruction
 }
 
 // MemoryArgument represents memargs immediate
@@ -33,6 +130,54 @@ type MemoryArgument struct {
 type InstructionMemArg struct {
 	Instruction InstructionType
 	MemArg      MemoryArgument
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionMemArg) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+// InstructionConst represents a constant value
+type InstructionConst struct {
+	Instruction InstructionType
+	ConstValue  uint64
+}
+
+// GetInstruction returns instruction opcode as InstructionType
+func (i *InstructionConst) GetInstruction() InstructionType {
+	return i.Instruction
+}
+
+func (i *InstructionConst) GetInt32() int32 {
+	return int32(i.ConstValue)
+}
+
+func (i *InstructionConst) GetInt64() int64 {
+	return int64(i.ConstValue)
+}
+
+func (i *InstructionConst) GetFloat32() float32 {
+	return math.Float32frombits(uint32(i.ConstValue))
+}
+
+func (i *InstructionConst) GetFloat64() float64 {
+	return math.Float64frombits(i.ConstValue)
+}
+
+func (i *InstructionConst) SetInt32(v int32) {
+	i.ConstValue = uint64(v)
+}
+
+func (i *InstructionConst) SetInt64(v int64) {
+	i.ConstValue = uint64(v)
+}
+
+func (i *InstructionConst) SetFloat32(v float32) {
+	i.ConstValue = uint64(math.Float32bits(v))
+}
+
+func (i *InstructionConst) SetFloat64(v float64) {
+	i.ConstValue = math.Float64bits(v)
 }
 
 const (
