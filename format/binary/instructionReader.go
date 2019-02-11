@@ -300,7 +300,7 @@ func readInstruction(r io.Reader) (types.InstructionInterface, error) {
 	case types.If:
 		instr, err := readInstructionBlock(r, t)
 
-		if err != ErrElseWithoutIf {
+		if errors.Cause(err) != ErrElseWithoutIf {
 			return instr, errors.WithStack(err)
 		}
 
@@ -334,7 +334,7 @@ func ReadExpression(r io.Reader) ([]types.InstructionInterface, error) {
 		r, err := readInstruction(r)
 
 		if err != nil {
-			if err == io.EOF {
+			if errors.Cause(err) == io.EOF {
 				err = nil
 			}
 

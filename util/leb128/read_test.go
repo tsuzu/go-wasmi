@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cs3238-tsuzu/go-wasmi/util/leb128"
+	"github.com/pkg/errors"
 )
 
 type ReadFuncTypeForUnsigned func(io.Reader) (uint64, error)
@@ -123,7 +124,7 @@ func TestReadInt64WithInsufficientData(t *testing.T) {
 
 	_, err := leb128.ReadInt64(bytes.NewReader(b))
 
-	if err != io.ErrUnexpectedEOF {
+	if errors.Cause(err) != io.ErrUnexpectedEOF {
 		t.Errorf("error should be unexpected EOF: %v", err)
 	}
 }
@@ -133,7 +134,7 @@ func TestReadInt32WithInsufficientData(t *testing.T) {
 
 	_, err := leb128.ReadInt32(bytes.NewReader(b))
 
-	if err != io.ErrUnexpectedEOF {
+	if errors.Cause(err) != io.ErrUnexpectedEOF {
 		t.Errorf("error should be unexpected EOF: %v", err)
 	}
 }
@@ -143,7 +144,7 @@ func TestReadIntWithInsufficientData(t *testing.T) {
 
 	_, err := leb128.ReadInt(bytes.NewReader(b))
 
-	if err != io.ErrUnexpectedEOF {
+	if errors.Cause(err) != io.ErrUnexpectedEOF {
 		t.Errorf("error should be unexpected EOF: %v", err)
 	}
 }

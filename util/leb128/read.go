@@ -1,6 +1,10 @@
 package leb128
 
-import "io"
+import (
+	"io"
+
+	"github.com/pkg/errors"
+)
 
 // ReadUint64 reads uint64 value encoded in LEB128 from reader
 func ReadUint64(r io.Reader) (uint64, error) {
@@ -71,11 +75,11 @@ func readLEB128(r io.Reader) (uint64, uint, error) {
 		l, err := r.Read(arr)
 
 		if l == 0 && err != nil {
-			if err == io.EOF {
+			if errors.Cause(err) == io.EOF {
 				err = io.ErrUnexpectedEOF
 			}
 
-			return 0, 0, err
+			return 0, 0, errors.WithStack(err)
 		}
 
 		res |= uint64(arr[0]&0x7f) << shift

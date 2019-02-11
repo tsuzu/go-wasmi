@@ -4,6 +4,8 @@ import (
 	"encoding/binary"
 	"io"
 
+	"github.com/pkg/errors"
+
 	"github.com/cs3238-tsuzu/go-wasmi/util/leb128"
 )
 
@@ -47,10 +49,11 @@ func ReadVector(r io.Reader, fn func(uint32, io.Reader) error) (uint32, error) {
 		err := fn(size, r)
 
 		if err != nil {
-			if err != io.EOF {
+			if errors.Cause(err) != io.EOF {
 				return 0, err
 			}
 			if i != size-1 {
+				err = io.ErrUnexpectedEOF
 				return 0, err
 			}
 		}
