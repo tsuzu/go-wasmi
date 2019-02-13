@@ -3,6 +3,7 @@ package binary
 import (
 	"io"
 	"io/ioutil"
+	"log"
 
 	"github.com/pkg/errors"
 
@@ -63,10 +64,12 @@ type Section struct {
 
 // UnmarshalSection parses wasm section
 func (s *Section) UnmarshalSection(r io.Reader) error {
+
 	kindByte, err := binrw.ReadByte(r)
 
 	if err != nil {
-		return errors.WithStack(err)
+		log.Println("return")
+		return err
 	}
 
 	kind := SectionIDType(kindByte)

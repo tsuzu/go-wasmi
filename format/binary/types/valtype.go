@@ -29,7 +29,7 @@ func ReadValType(r io.Reader) (types.ValType, error) {
 		}
 	}
 
-	return 0, ErrInvalidValType
+	return 0, errors.Wrapf(ErrInvalidValType, "actual value: %d", b)
 }
 
 // ReadVecValType reads a vector of value types from reader

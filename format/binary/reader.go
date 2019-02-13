@@ -46,10 +46,11 @@ func ParseBinaryFormat(r io.Reader) ([]Section, error) {
 		if errors.Cause(err) == io.EOF {
 			break
 		} else if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, err
 		}
 
 		sections = append(sections, section)
 	}
+
 	return sections, nil
 }

@@ -319,7 +319,7 @@ func readInstruction(r io.Reader) (types.InstructionInterface, error) {
 		return readInstructionConst(r, t)
 	}
 
-	if t >= types.I32Load && t <= types.I64Store {
+	if t >= types.I32Load && t <= types.I64Store32 {
 		return readInstructionMemArg(r, t)
 	}
 

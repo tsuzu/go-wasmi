@@ -810,7 +810,7 @@ func TestFunctionBranchTable(t *testing.T) {
 	}
 }
 
-func TestFunctionBranchTable2(t *testing.T) { // NOT EXECUTABLE
+func TestFunctionBranchTable2(t *testing.T) {
 	const wat = `(module
 		(func (param i32) (result i32)
 			(i32.add

@@ -46,29 +46,31 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 
 		limited := io.LimitReader(r, int64(l))
 
-		_, err = binrw.ReadVector(r, func(size uint32, r io.Reader) error {
+		index := 0
+		_, err = binrw.ReadVector(limited, func(size uint32, r io.Reader) error {
 			if elm.Locals == nil {
 				elm.Locals = make([]CodeSectionLocal, 0, size)
 			}
 
 			var local CodeSectionLocal
 
-			size, err := leb128.ReadUint32(r)
+			l, err := leb128.ReadUint32(r)
 			if err != nil {
-				return errors.WithStack(err)
+				return errors.Wrapf(err, "reading %dth code in code section", index)
 			}
 
-			local.Size = size
+			local.Size = l
 
 			v, err := bintypes.ReadValType(r)
 			if err != nil {
-				return errors.WithStack(err)
+				return errors.Wrapf(err, "reading %dth code in code section", index)
 			}
 
 			local.ValType = v
 
 			elm.Locals = append(elm.Locals, local)
 
+			index++
 			return nil
 		})
 
@@ -82,6 +84,11 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 		}
 
 		elm.Expr = expr
+
+		buf := make([]byte, 16)
+		if l, _ := limited.Read(buf); l != 0 {
+			return errors.New("All data in code section is not read")
+		}
 
 		s.Codes = append(s.Codes, elm)
 
