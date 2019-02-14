@@ -31,8 +31,8 @@ func RunWat2Wasm(wat string) ([]byte, error) {
 	outName := out.Name()
 	out.Close()
 
-	if err := exec.Command("wat2wasm", inName, "-o", outName).Run(); err != nil {
-		return nil, errors.WithStack(err)
+	if b, err := exec.Command("wat2wasm", inName, "-o", outName).CombinedOutput(); err != nil {
+		return nil, errors.Wrap(err, string(b))
 	}
 
 	b, err := ioutil.ReadFile(outName)

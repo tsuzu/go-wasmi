@@ -7,7 +7,7 @@ WebAssembly Interpreter written in Go
 
 ## Status
 - WIP
-- [ ] WASM Parser(partially)
+- [x] WASM Parser
 - [ ] Validator
 - [ ] Executor
 - [ ] Command Line Tool

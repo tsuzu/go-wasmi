@@ -64,18 +64,6 @@ func TestParse2(t *testing.T) {
 	}
 }
 
-type mockWriter struct {
-	cnt int
-}
-
-func (w *mockWriter) Write(b []byte) (int, error) {
-	w.cnt += len(b)
-
-	//log.Println(w.cnt)
-
-	return len(b), nil
-}
-
 func TestParseEmpty(t *testing.T) {
 	fp, err := os.Open("testdata/go_empty.wasm")
 

@@ -34,7 +34,7 @@ func TestReadLEUint32(t *testing.T) {
 }
 
 func TestReadLEUint64(t *testing.T) {
-	b := []byte{0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9} // The last element will be ignores
+	b := []byte{0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9} // The last element will be ignored
 
 	v, err := binrw.ReadLEUint64(bytes.NewReader(b))
 
