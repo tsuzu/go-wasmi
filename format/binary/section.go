@@ -3,7 +3,6 @@ package binary
 import (
 	"io"
 	"io/ioutil"
-	"log"
 
 	"github.com/pkg/errors"
 
@@ -68,7 +67,6 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 	kindByte, err := binrw.ReadByte(r)
 
 	if err != nil {
-		log.Println("return")
 		return err
 	}
 
