@@ -21,9 +21,9 @@ func TestFunctionEmpty(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse empty function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: make([]types.ValType, 0),
@@ -32,18 +32,18 @@ func TestFunctionEmpty(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr:   []types.InstructionInterface{},
 					},
 				},
@@ -66,9 +66,9 @@ func TestFunctionSomeParams(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{
@@ -81,18 +81,18 @@ func TestFunctionSomeParams(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr:   []types.InstructionInterface{},
 					},
 				},
@@ -115,9 +115,9 @@ func TestFunctionSomeLocals(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: make([]types.ValType, 0),
@@ -126,19 +126,19 @@ func TestFunctionSomeLocals(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{
-							CodeSectionLocal{
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{
+							types.SectionCodeLocalElement{
 								Size:    2,
 								ValType: types.I32,
 							},
@@ -165,9 +165,9 @@ func TestFunctionSomeLocals2(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: make([]types.ValType, 0),
@@ -176,35 +176,35 @@ func TestFunctionSomeLocals2(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{
-							CodeSectionLocal{
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.I32,
 							},
-							CodeSectionLocal{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.F32,
 							},
-							CodeSectionLocal{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.I64,
 							},
-							CodeSectionLocal{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.I32,
 							},
-							CodeSectionLocal{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.F64,
 							},
@@ -236,9 +236,9 @@ func TestFunctionResult(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{
@@ -252,19 +252,19 @@ func TestFunctionResult(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{
-							CodeSectionLocal{
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.F32,
 							},
@@ -299,9 +299,9 @@ func TestFunctionLocals(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{},
@@ -312,16 +312,16 @@ func TestFunctionLocals(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityExport:
-			s := &SectionEntityExport{
-				ExportTypes: []*types.ExportType{
+		case *types.SectionExport:
+			s := &types.SectionExport{
+				Exports: []*types.ExportType{
 					&types.ExportType{
 						Name:            "local-mixed",
 						DescriptionKind: types.ExportDescriptionFunc,
@@ -330,20 +330,20 @@ func TestFunctionLocals(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "export section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{
-							CodeSectionLocal{
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.F32,
 							},
-							CodeSectionLocal{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.I32,
 							},
-							CodeSectionLocal{
+							types.SectionCodeLocalElement{
 								Size:    1,
 								ValType: types.F64,
 							},
@@ -380,9 +380,9 @@ func TestFunctionI32Const(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{},
@@ -393,16 +393,16 @@ func TestFunctionI32Const(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityExport:
-			s := &SectionEntityExport{
-				ExportTypes: []*types.ExportType{
+		case *types.SectionExport:
+			s := &types.SectionExport{
+				Exports: []*types.ExportType{
 					&types.ExportType{
 						Name:            "value-i32",
 						DescriptionKind: types.ExportDescriptionFunc,
@@ -411,16 +411,16 @@ func TestFunctionI32Const(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "export section does not match")
-		case *SectionEntityCode:
+		case *types.SectionCode:
 			constInstr := &types.InstructionConst{
 				Instruction: types.I32Const,
 			}
 			constInstr.SetInt32(77)
 
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							constInstr,
 						},
@@ -445,9 +445,9 @@ func TestFunctionF32Const(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{},
@@ -458,16 +458,16 @@ func TestFunctionF32Const(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityExport:
-			s := &SectionEntityExport{
-				ExportTypes: []*types.ExportType{
+		case *types.SectionExport:
+			s := &types.SectionExport{
+				Exports: []*types.ExportType{
 					&types.ExportType{
 						Name:            "value-f32",
 						DescriptionKind: types.ExportDescriptionFunc,
@@ -476,16 +476,16 @@ func TestFunctionF32Const(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "export section does not match")
-		case *SectionEntityCode:
+		case *types.SectionCode:
 			constInstr := &types.InstructionConst{
 				Instruction: types.F32Const,
 			}
 			constInstr.SetFloat32(77.7)
 
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							constInstr,
 						},
@@ -510,9 +510,9 @@ func TestFunctionBlockAndCall(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{},
@@ -521,17 +521,17 @@ func TestFunctionBlockAndCall(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityExport:
-			s := &SectionEntityExport{
-				ExportTypes: []*types.ExportType{
+		case *types.SectionExport:
+			s := &types.SectionExport{
+				Exports: []*types.ExportType{
 					&types.ExportType{
 						Name:            "value-block-void",
 						DescriptionKind: types.ExportDescriptionFunc,
@@ -540,12 +540,12 @@ func TestFunctionBlockAndCall(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "export section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{}, // dummy
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{}, // dummy
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							&types.InstructionBlock{
 								Instruction: types.Block,
@@ -582,9 +582,9 @@ func TestFunctionBranch(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{},
@@ -593,18 +593,18 @@ func TestFunctionBranch(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							&types.InstructionLabelIndex{
 								Instruction: types.Branch,
@@ -633,9 +633,9 @@ func TestFunctionBranchIf(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{
@@ -646,18 +646,18 @@ func TestFunctionBranchIf(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							&types.InstructionLocalIndex{
 								Instruction: types.LocalGet,
@@ -690,9 +690,9 @@ func TestFunctionBranchIf2(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{
@@ -705,14 +705,14 @@ func TestFunctionBranchIf2(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
+		case *types.SectionCode:
 			constInstr50 := &types.InstructionConst{
 				Instruction: types.I32Const,
 			}
@@ -723,10 +723,10 @@ func TestFunctionBranchIf2(t *testing.T) {
 			}
 			constInstr51.SetInt32(51)
 
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							constInstr50,
 							&types.InstructionLocalIndex{
@@ -764,9 +764,9 @@ func TestFunctionBranchTable(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{
@@ -777,18 +777,18 @@ func TestFunctionBranchTable(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+		case *types.SectionCode:
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							&types.InstructionLocalIndex{
 								Instruction: types.LocalGet,
@@ -829,9 +829,9 @@ func TestFunctionBranchTable2(t *testing.T) {
 	testutil.AssertNotError(t, err, "failed to parse function")
 
 	for i := range sections {
-		switch v := sections[i].Entity.(type) {
-		case *SectionEntityType:
-			s := &SectionEntityType{
+		switch v := sections[i].(type) {
+		case *types.SectionType:
+			s := &types.SectionType{
 				FuncTypes: []*types.FuncType{
 					&types.FuncType{
 						ParameterTypes: []types.ValType{
@@ -844,14 +844,14 @@ func TestFunctionBranchTable2(t *testing.T) {
 				},
 			}
 			testutil.Assert(t, s, v, "type section does not match")
-		case *SectionEntityFunction:
-			s := &SectionEntityFunction{
+		case *types.SectionFunction:
+			s := &types.SectionFunction{
 				Types: []types.TypeIndex{
 					0,
 				},
 			}
 			testutil.Assert(t, s, v, "function section does not match")
-		case *SectionEntityCode:
+		case *types.SectionCode:
 			constInstr50 := &types.InstructionConst{
 				Instruction: types.I32Const,
 			}
@@ -867,10 +867,10 @@ func TestFunctionBranchTable2(t *testing.T) {
 			}
 			constInstr2.SetInt32(2)
 
-			s := &SectionEntityCode{
-				Codes: []CodeSectionElement{
-					CodeSectionElement{
-						Locals: []CodeSectionLocal{},
+			s := &types.SectionCode{
+				Codes: []types.SectionCodeElementType{
+					types.SectionCodeElementType{
+						Locals: []types.SectionCodeLocalElement{},
 						Expr: []types.InstructionInterface{
 							&types.InstructionBlock{
 								Instruction: types.Block,

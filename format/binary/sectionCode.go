@@ -12,31 +12,16 @@ import (
 	"github.com/cs3238-tsuzu/go-wasmi/types"
 )
 
-// CodeSectionLocal represents a set of local variables in a code element
-type CodeSectionLocal struct {
-	Size    uint32
-	ValType types.ValType
-}
+// UnmarshalSectionCode parses code section payload
+func UnmarshalSectionCode(r io.Reader) (types.Section, error) {
+	var s types.SectionCode
 
-// CodeSectionElement represents an element of code section
-type CodeSectionElement struct {
-	Locals []CodeSectionLocal
-	Expr   []types.InstructionInterface
-}
-
-// SectionEntityCode stores an entity of code section
-type SectionEntityCode struct {
-	Codes []CodeSectionElement
-}
-
-// UnmarshalSectionEntity parses code section payload
-func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 	_, err := binrw.ReadVector(r, func(size uint32, r io.Reader) error {
 		if s.Codes == nil {
-			s.Codes = make([]CodeSectionElement, 0, size)
+			s.Codes = make([]types.SectionCodeElementType, 0, size)
 		}
 
-		elm := CodeSectionElement{}
+		elm := types.SectionCodeElementType{}
 
 		l, err := leb128.ReadUint32(r)
 
@@ -49,10 +34,10 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 		index := 0
 		_, err = binrw.ReadVector(limited, func(size uint32, r io.Reader) error {
 			if elm.Locals == nil {
-				elm.Locals = make([]CodeSectionLocal, 0, size)
+				elm.Locals = make([]types.SectionCodeLocalElement, 0, size)
 			}
 
-			var local CodeSectionLocal
+			var local types.SectionCodeLocalElement
 
 			l, err := leb128.ReadUint32(r)
 			if err != nil {
@@ -96,13 +81,13 @@ func (s *SectionEntityCode) UnmarshalSectionEntity(r io.Reader) error {
 	})
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	return nil
+	return s, nil
 }
 
-// SectionID returns wasm section id
+/*// SectionID returns wasm section id
 func (s *SectionEntityCode) SectionID() SectionIDType {
-	return SectionCode
-}
+	return SectionCodeID
+}*/

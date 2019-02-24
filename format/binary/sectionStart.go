@@ -9,24 +9,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-// SectionEntityStart stores an entity of start section
-type SectionEntityStart struct {
-	Index types.FuncIndex
-}
-
-// UnmarshalSectionEntity parses start section payload
-func (s *SectionEntityStart) UnmarshalSectionEntity(r io.Reader) error {
+// UnmarshalSectionStart parses start section payload
+func UnmarshalSectionStart(r io.Reader) (types.Section, error) {
+	var s types.SectionStart
 	index, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	s.Index = types.FuncIndex(index)
-	return nil
-}
-
-// SectionID returns wasm section id
-func (s *SectionEntityStart) SectionID() SectionIDType {
-	return SectionStart
+	s.FuncIndex = types.FuncIndex(index)
+	return &s, nil
 }

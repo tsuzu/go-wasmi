@@ -4,32 +4,21 @@ import (
 	"io"
 
 	bintypes "github.com/cs3238-tsuzu/go-wasmi/format/binary/types"
-	"github.com/pkg/errors"
-
-	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
-
 	"github.com/cs3238-tsuzu/go-wasmi/types"
+	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
+	"github.com/pkg/errors"
 )
 
-// GlobalSectionElement represents an element in global section
-type GlobalSectionElement struct {
-	Type types.GlobalType
-	Expr []types.InstructionInterface
-}
+// UnmarshalSectionGlobal parses global section payload
+func UnmarshalSectionGlobal(r io.Reader) (types.Section, error) {
+	var s types.SectionGlobal
 
-// SectionEntityGlobal stores an entity of code section
-type SectionEntityGlobal struct {
-	Globals []GlobalSectionElement
-}
-
-// UnmarshalSectionEntity parses global section payload
-func (s *SectionEntityGlobal) UnmarshalSectionEntity(r io.Reader) error {
 	_, err := binrw.ReadVector(r, func(size uint32, r io.Reader) error {
 		if s.Globals == nil {
-			s.Globals = make([]GlobalSectionElement, 0, size)
+			s.Globals = make([]types.SectionGlobalElementType, 0, size)
 		}
 
-		elm := GlobalSectionElement{}
+		elm := types.SectionGlobalElementType{}
 
 		t, err := bintypes.ReadGlobalType(r)
 		if err != nil {
@@ -50,13 +39,8 @@ func (s *SectionEntityGlobal) UnmarshalSectionEntity(r io.Reader) error {
 	})
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	return nil
-}
-
-// SectionID returns wasm section id
-func (s *SectionEntityGlobal) SectionID() SectionIDType {
-	return SectionGlobal
+	return &s, nil
 }

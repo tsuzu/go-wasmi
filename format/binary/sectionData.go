@@ -11,26 +11,15 @@ import (
 	"github.com/cs3238-tsuzu/go-wasmi/types"
 )
 
-// DataSectionElement represents an element in data section
-type DataSectionElement struct {
-	MemoryIndex types.MemoryIndex
-	Expr        []types.InstructionInterface
-	Bytes       []byte
-}
-
-// SectionEntityData stores an entity of code section
-type SectionEntityData struct {
-	Elements []DataSectionElement
-}
-
-// UnmarshalSectionEntity parses data section payload
-func (s *SectionEntityData) UnmarshalSectionEntity(r io.Reader) error {
+// UnmarshalSectionData parses data section payload
+func UnmarshalSectionData(r io.Reader) (types.Section, error) {
+	var s types.SectionData
 	_, err := binrw.ReadVector(r, func(size uint32, r io.Reader) error {
-		if s.Elements == nil {
-			s.Elements = make([]DataSectionElement, 0, size)
+		if s.Data == nil {
+			s.Data = make([]types.SectionDataElement, 0, size)
 		}
 
-		elm := DataSectionElement{}
+		elm := types.SectionDataElement{}
 
 		index, err := leb128.ReadUint32(r)
 		if err != nil {
@@ -51,19 +40,14 @@ func (s *SectionEntityData) UnmarshalSectionEntity(r io.Reader) error {
 			return errors.WithStack(err)
 		}
 
-		s.Elements = append(s.Elements, elm)
+		s.Data = append(s.Data, elm)
 
 		return nil
 	})
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	return nil
-}
-
-// SectionID returns wasm section id
-func (s *SectionEntityData) SectionID() SectionIDType {
-	return SectionData
+	return &s, nil
 }

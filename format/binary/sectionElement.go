@@ -3,34 +3,21 @@ package binary
 import (
 	"io"
 
+	"github.com/cs3238-tsuzu/go-wasmi/types"
+	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
 	"github.com/cs3238-tsuzu/go-wasmi/util/leb128"
 	"github.com/pkg/errors"
-
-	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
-
-	"github.com/cs3238-tsuzu/go-wasmi/types"
 )
 
-// ElementSectionElement represents an element in element section
-type ElementSectionElement struct {
-	TableIndex  types.TableIndex
-	Expr        []types.InstructionInterface
-	FuncIndices []types.FuncIndex
-}
-
-// SectionEntityElement stores an entity of code section
-type SectionEntityElement struct {
-	Elements []ElementSectionElement
-}
-
-// UnmarshalSectionEntity parses element section payload
-func (s *SectionEntityElement) UnmarshalSectionEntity(r io.Reader) error {
+// UnmarshalSectionElement parses element section payload
+func UnmarshalSectionElement(r io.Reader) (types.Section, error) {
+	var s types.SectionElement
 	_, err := binrw.ReadVector(r, func(size uint32, r io.Reader) error {
 		if s.Elements == nil {
-			s.Elements = make([]ElementSectionElement, 0, size)
+			s.Elements = make([]types.SectionElementElementType, 0, size)
 		}
 
-		elm := ElementSectionElement{}
+		elm := types.SectionElementElementType{}
 
 		index, err := leb128.ReadUint32(r)
 		if err != nil {
@@ -66,13 +53,8 @@ func (s *SectionEntityElement) UnmarshalSectionEntity(r io.Reader) error {
 	})
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	return nil
-}
-
-// SectionID returns wasm section id
-func (s *SectionEntityElement) SectionID() SectionIDType {
-	return SectionElement
+	return &s, nil
 }

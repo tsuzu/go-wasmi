@@ -6,6 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/cs3238-tsuzu/go-wasmi/types"
 	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
 	"github.com/cs3238-tsuzu/go-wasmi/util/leb128"
 )
@@ -14,30 +15,30 @@ import (
 type SectionIDType byte
 
 const (
-	//SectionCustom : custom section
-	SectionCustom SectionIDType = iota
-	//SectionType : type section
-	SectionType
-	//SectionImport : import section
-	SectionImport
-	//SectionFunction : function section
-	SectionFunction
-	//SectionTable : table section
-	SectionTable
-	//SectionMemory : memory section
-	SectionMemory
-	//SectionGlobal : global section
-	SectionGlobal
-	//SectionExport : export section
-	SectionExport
-	//SectionStart : start section
-	SectionStart
-	//SectionElement : element section
-	SectionElement
-	//SectionCode : code section
-	SectionCode
-	//SectionData : data section
-	SectionData
+	//SectionCustomID : custom section
+	SectionCustomID SectionIDType = iota
+	//SectionTypeID : type section
+	SectionTypeID
+	//SectionImportID : import section
+	SectionImportID
+	//SectionFunctionID : function section
+	SectionFunctionID
+	//SectionTableID : table section
+	SectionTableID
+	//SectionMemoryID : memory section
+	SectionMemoryID
+	//SectionGlobalID : global section
+	SectionGlobalID
+	//SectionExportID : export section
+	SectionExportID
+	//SectionStartID : start section
+	SectionStartID
+	//SectionElementID : element section
+	SectionElementID
+	//SectionCodeID : code section
+	SectionCodeID
+	//SectionDataID : data section
+	SectionDataID
 )
 
 var (
@@ -56,18 +57,12 @@ type SectionEntity interface {
 	SectionID() SectionIDType
 }
 
-// Section stores wasm section
-type Section struct {
-	Entity SectionEntity
-}
-
 // UnmarshalSection parses wasm section
-func (s *Section) UnmarshalSection(r io.Reader) error {
-
+func UnmarshalSection(r io.Reader) (types.Section, error) {
 	kindByte, err := binrw.ReadByte(r)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	kind := SectionIDType(kindByte)
@@ -75,49 +70,49 @@ func (s *Section) UnmarshalSection(r io.Reader) error {
 	size, err := leb128.ReadUint32(r)
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	var entity SectionEntity
+	var parser func(io.Reader) (types.Section, error)
 	switch kind {
-	case SectionCustom:
-		entity = &SectionEntityCustom{}
-	case SectionType:
-		entity = &SectionEntityType{}
-	case SectionImport:
-		entity = &SectionEntityImport{}
-	case SectionFunction:
-		entity = &SectionEntityFunction{}
-	case SectionTable:
-		entity = &SectionEntityTable{}
-	case SectionMemory:
-		entity = &SectionEntityMemory{}
-	case SectionGlobal:
-		entity = &SectionEntityGlobal{}
-	case SectionExport:
-		entity = &SectionEntityExport{}
-	case SectionStart:
-		entity = &SectionEntityStart{}
-	case SectionElement:
-		entity = &SectionEntityElement{}
-	case SectionCode:
-		entity = &SectionEntityCode{}
-	case SectionData:
-		entity = &SectionEntityData{}
+	case SectionCustomID:
+		parser = UnmarshalSectionCustom
+	case SectionTypeID:
+		parser = UnmarshalSectionType
+	case SectionImportID:
+		parser = UnmarshalSectionImport
+	case SectionFunctionID:
+		parser = UnmarshalSectionFunction
+	case SectionTableID:
+		parser = UnmarshalSectionTable
+	case SectionMemoryID:
+		parser = UnmarshalSectionMemory
+	case SectionGlobalID:
+		parser = UnmarshalSectionGlobal
+	case SectionExportID:
+		parser = UnmarshalSectionExport
+	case SectionStartID:
+		parser = UnmarshalSectionStart
+	case SectionElementID:
+		parser = UnmarshalSectionElement
+	case SectionCodeID:
+		parser = UnmarshalSectionCode
+	case SectionDataID:
+		parser = UnmarshalSectionData
 	default:
-		return ErrUnknownSection
+		return nil, ErrUnknownSection
 	}
 
 	limited := io.LimitReader(r, int64(size))
 
-	if err := entity.UnmarshalSectionEntity(limited); err != nil {
-		return errors.WithStack(err)
+	s, err := parser(limited)
+	if err != nil {
+		return nil, errors.WithStack(err)
 	}
 
 	if b, _ := ioutil.ReadAll(limited); len(b) != 0 {
-		return ErrExcessOfBytesInSection
+		return nil, ErrExcessOfBytesInSection
 	}
 
-	s.Entity = entity
-	return nil
+	return s, nil
 }

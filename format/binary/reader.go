@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/cs3238-tsuzu/go-wasmi/types"
 	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
 )
 
@@ -17,7 +18,7 @@ const (
 var ErrInvalidFormat = errors.New("invalid format")
 
 // ParseBinaryFormat parses wasm binary and returns sections
-func ParseBinaryFormat(r io.Reader) ([]Section, error) {
+func ParseBinaryFormat(r io.Reader) ([]types.Section, error) {
 	magic, err := binrw.ReadLEUint32(r)
 
 	if err != nil {
@@ -38,10 +39,9 @@ func ParseBinaryFormat(r io.Reader) ([]Section, error) {
 		return nil, ErrInvalidFormat
 	}
 
-	sections := make([]Section, 0, 16)
+	sections := make([]types.Section, 0, 16)
 	for {
-		var section Section
-		err := section.UnmarshalSection(r)
+		section, err := UnmarshalSection(r)
 
 		if errors.Cause(err) == io.EOF {
 			break

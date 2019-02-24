@@ -4,20 +4,15 @@ import (
 	"io"
 
 	bintypes "github.com/cs3238-tsuzu/go-wasmi/format/binary/types"
-	"github.com/pkg/errors"
-
-	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
-
 	"github.com/cs3238-tsuzu/go-wasmi/types"
+	"github.com/cs3238-tsuzu/go-wasmi/util/binrw"
+	"github.com/pkg/errors"
 )
 
-// SectionEntityType stores an entity of types section
-type SectionEntityType struct {
-	FuncTypes []*types.FuncType
-}
+// UnmarshalSectionType parses custom section payload
+func UnmarshalSectionType(r io.Reader) (types.Section, error) {
+	var s types.SectionType
 
-// UnmarshalSectionEntity parses custom section payload
-func (s *SectionEntityType) UnmarshalSectionEntity(r io.Reader) error {
 	var funcTypes []*types.FuncType
 	_, err := binrw.ReadVector(r, func(size uint32, r io.Reader) error {
 		if funcTypes == nil {
@@ -36,15 +31,10 @@ func (s *SectionEntityType) UnmarshalSectionEntity(r io.Reader) error {
 	})
 
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
 	s.FuncTypes = funcTypes
 
-	return nil
-}
-
-// SectionID returns wasm section id
-func (s *SectionEntityType) SectionID() SectionIDType {
-	return SectionType
+	return &s, nil
 }
